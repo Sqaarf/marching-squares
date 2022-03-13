@@ -5,7 +5,7 @@ from v1.Field import Field
 
 class Window:
     def __init__(self):
-        self.width, self.height = (600, 400)
+        self.width, self.height = (800, 800)
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('Marching squares')
 
