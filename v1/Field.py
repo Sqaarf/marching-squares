@@ -12,7 +12,10 @@ class Field:
         self.field = []
 
     def load(self):
-        for y in range(self.cols):
-            self.field.append([])
-            for x in range(self.rows):
-                self.field[y].append(Point(x*self.res+self.width//5, y*self.res+10, random.random()))
+        with open("./data.txt") as file:
+            for y in range(self.cols):
+                self.field.append([])
+                for x in range(self.rows):
+                    self.field[y].append(Point(x*self.res+10, y*self.res+10, float(file.readline())))
+        print(f"Size of field : {len(self.field)}")
+        print(f"Number of points : {len(self.field)**2}")
