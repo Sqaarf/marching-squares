@@ -23,4 +23,4 @@ class Point:
             win.blit(scalar_label, (self.x + scalar_label.get_width() // 2 - 6, self.y))
 
     def __str__(self):
-        return f"({self.x},{self.y})"
+        return f"({self.x},{self.y},{'%.3f' % self.v})"
