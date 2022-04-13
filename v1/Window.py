@@ -35,10 +35,12 @@ class Window:
         tlpIndex = [0, 0]
         trpIndex = [0, 1]
         blpIndex = [1, 0]
+        mPoints = []
         # brpIndex = [1, 1]
         
-        for row in field[:-1]:
-            for i in range(len(row) - 1):
+        for i in range(len(field[:-1])):
+
+            for j in range(len(field[:-1][i]) - 1):
                 topLeftPoint = field[tlpIndex[0]][tlpIndex[1]]
                 topRightPoint = field[trpIndex[0]][trpIndex[1]]
                 botLeftPoint = field[blpIndex[0]][blpIndex[1]]
@@ -47,12 +49,11 @@ class Window:
                 #print(f"{topLeftPoint} {topRightPoint} {botLeftPoint}")
 
                 if topLeftPoint.v < self.isoVal < topRightPoint.v or topLeftPoint.v > self.isoVal > topRightPoint.v:
-                    print(f"{topLeftPoint.y}")
-                    #
-                    # print(f"{topLeftPoint.x + 40/2} {topLeftPoint.y}")
+                    mPoints.append((topLeftPoint.x + 40/2, topLeftPoint.y))
                     pygame.draw.circle(self.win, (255,0,0), (topLeftPoint.x + 40/2, topLeftPoint.y), 2)
                 
                 if topLeftPoint.v < self.isoVal < botLeftPoint.v or topLeftPoint.v > self.isoVal > botLeftPoint.v:
+                    mPoints.append((topLeftPoint.x, topLeftPoint.y + 40/2))
                     pygame.draw.circle(self.win, (255,0,0), (topLeftPoint.x, topLeftPoint.y + 40/2), 2)
 
                 tlpIndex[1] += 1
@@ -60,9 +61,14 @@ class Window:
                 blpIndex[1] += 1
                 # brpIndex[1] += 1
             print("-------------------")
-            tlpIndex[0] += 1; tlpIndex[1] = 0
-            trpIndex[0] += 1; trpIndex[1] = 0
-            blpIndex[0] += 1; blpIndex[1] = 0
+            tlpIndex[0] += 1
+            tlpIndex[1] = 0
+            trpIndex[0] += 1
+            trpIndex[1] = 1
+            blpIndex[0] += 1
+            blpIndex[1] = 0
+
+            print("\n".join([str(x) for x in mPoints]))
     
 
     # def marchingSquare(self):
