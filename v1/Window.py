@@ -1,7 +1,8 @@
 import pygame
 
 from Field import Field
-import numpy as np
+
+from Point import Point
 
 
 class Window:
@@ -16,8 +17,6 @@ class Window:
         self.field = Field(self.width, self.height)
         self.field.load()
 
-        self.isoVal = 2.4
-
     def commands(self):
         for events in pygame.event.get():
             if events.type == pygame.QUIT:
@@ -25,66 +24,83 @@ class Window:
 
     def render(self):
         self.win.fill((0, 0, 0))
+        '''
         for row in self.field.field:
             for point in row:
                 point.render(self.win)
-    
+        '''
+
     def marchingSquare(self):
         field = self.field.field
 
         tlpIndex = [0, 0]
         trpIndex = [0, 1]
         blpIndex = [1, 0]
-        mPoints = []
-        # brpIndex = [1, 1]
-        
-        for i in range(len(field[:-1])):
+        brpIndex = [1, 1]
 
+        for i in range(len(field[:-1])):
             for j in range(len(field[:-1][i]) - 1):
                 topLeftPoint = field[tlpIndex[0]][tlpIndex[1]]
                 topRightPoint = field[trpIndex[0]][trpIndex[1]]
+                botRightPoint = field[brpIndex[0]][brpIndex[1]]
                 botLeftPoint = field[blpIndex[0]][blpIndex[1]]
-                # botRightPoint = field[brpIndex[0]][brpIndex[1]]
 
-                #print(f"{topLeftPoint} {topRightPoint} {botLeftPoint}")
+                a = (topLeftPoint.x + 40 / 2, topLeftPoint.y)
+                b = (topRightPoint.x, topRightPoint.y + 40 / 2)
+                c = (botLeftPoint.x + 40 / 2, botLeftPoint.y)
+                d = (topLeftPoint.x, topLeftPoint.y + 40 / 2)
 
-                if topLeftPoint.v < self.isoVal < topRightPoint.v or topLeftPoint.v > self.isoVal > topRightPoint.v:
-                    mPoints.append((topLeftPoint.x + 40/2, topLeftPoint.y))
-                    pygame.draw.circle(self.win, (255,0,0), (topLeftPoint.x + 40/2, topLeftPoint.y), 2)
-                
-                if topLeftPoint.v < self.isoVal < botLeftPoint.v or topLeftPoint.v > self.isoVal > botLeftPoint.v:
-                    mPoints.append((topLeftPoint.x, topLeftPoint.y + 40/2))
-                    pygame.draw.circle(self.win, (255,0,0), (topLeftPoint.x, topLeftPoint.y + 40/2), 2)
+                state = self.getState(topLeftPoint, topRightPoint, botRightPoint, botLeftPoint)
+                self.drawIsoLines(state, a, b, c, d)
 
                 tlpIndex[1] += 1
                 trpIndex[1] += 1
                 blpIndex[1] += 1
-                # brpIndex[1] += 1
-            print("-------------------")
+                brpIndex[1] += 1
             tlpIndex[0] += 1
             tlpIndex[1] = 0
             trpIndex[0] += 1
             trpIndex[1] = 1
+            brpIndex[0] += 1
+            brpIndex[1] = 1
             blpIndex[0] += 1
             blpIndex[1] = 0
 
-            print("\n".join([str(x) for x in mPoints]))
-    
+    def getState(self, tlp: Point, trp: Point, brp: Point, blp: Point, ):
+        return tlp.bVal * 8 + trp.bVal * 4 + brp.bVal * 2 + blp.bVal * 1
 
-    # def marchingSquare(self):
-    #     first = True
-    #     for row in self.field.field:
-    #         for point, nextPoint in zip(row, row[1:]):
-    #             if not first:
-    #                 continue
-    #             print(point, nextPoint)
-    #             first = False
-    #             if(point.v < self.isoVal < nextPoint.v):
-    #                 pygame.draw.circle(self.win, (255,0,0), (point.x + 40/self.isoVal, point.y), 2)
-    #             elif(point.v > self.isoVal > nextPoint.v):
-    #                 pygame.draw.circle(self.win, (255,0,0), (self.x, self.y), 2) 
-    #     print("Fait !")    
+    def drawIsoLines(self, state: int, a: tuple, b: tuple, c: tuple, d: tuple):
 
+        if state == 1:
+            pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
+        elif state == 2:
+            pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
+        elif state == 3:
+            pygame.draw.line(self.win, (255, 255, 255), b, d, 2)
+        elif state == 4:
+            pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
+        elif state == 5:
+            pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
+            pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
+        elif state == 6:
+            pygame.draw.line(self.win, (255, 255, 255), a, c, 2)
+        elif state == 7:
+            pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
+        elif state == 8:
+            pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
+        elif state == 9:
+            pygame.draw.line(self.win, (255, 255, 255), a, c, 2)
+        elif state == 10:
+            pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
+            pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
+        elif state == 11:
+            pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
+        elif state == 12:
+            pygame.draw.line(self.win, (255, 255, 255), b, d, 2)
+        elif state == 13:
+            pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
+        elif state == 14:
+            pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
 
     def loop(self):
         while self.run:
