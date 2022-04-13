@@ -1,7 +1,6 @@
 import pygame
 
 from Field import Field
-
 from Point import Point
 
 
