@@ -1,6 +1,6 @@
 import random
 
-from v1.Point import Point
+from Point import Point
 
 
 class Field:

@@ -1,6 +1,7 @@
 import pygame
 
-from v1.Field import Field
+from Field import Field
+import numpy as np
 
 
 class Window:
@@ -15,6 +16,8 @@ class Window:
         self.field = Field(self.width, self.height)
         self.field.load()
 
+        self.isoVal = 2.4
+
     def commands(self):
         for events in pygame.event.get():
             if events.type == pygame.QUIT:
@@ -25,10 +28,26 @@ class Window:
         for row in self.field.field:
             for point in row:
                 point.render(self.win)
+    
+    def marchingSquare(self):
+        first = True
+        for row in self.field.field:
+            for point, nextPoint in zip(row, row[1:]):
+                if not first:
+                    continue
+                print(point, nextPoint)
+                first = False
+                if(point.v < self.isoVal < nextPoint.v):
+                    pygame.draw.circle(self.win, (255,0,0), (point.x + 40/self.isoVal, point.y), 2)
+                elif(point.v > self.isoVal > nextPoint.v):
+                    pygame.draw.circle(self.win, (255,0,0), (self.x, self.y), 2) 
+        print("Fait !")    
+                    
 
     def loop(self):
         while self.run:
             pygame.time.Clock().tick(self.fps)
             self.commands()
             self.render()
+            self.marchingSquare()
             pygame.display.update()
