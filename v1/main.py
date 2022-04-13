@@ -1,6 +1,6 @@
 import pygame
 
-from v1.Window import Window
+from Window import Window
 
 if __name__ == "__main__":
     pygame.init()
