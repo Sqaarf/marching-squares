@@ -5,7 +5,7 @@ from GeometryComponents.Point import Point
 
 
 class Window:
-    def __init__(self, verbose):
+    def __init__(self, player, verbose):
         self.width, self.height = (800, 800)
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('Marching squares')
@@ -13,10 +13,11 @@ class Window:
         self.fps = 30
         self.run = True
 
-        self.verbose = verbose
-
         self.field = Field(self.width, self.height)
         self.field.load()
+
+        self.player = player
+        self.verbose = verbose
 
     def commands(self):
         for events in pygame.event.get():
@@ -25,7 +26,8 @@ class Window:
 
     def render(self):
         self.win.fill((0, 0, 0))
-        
+        self.player.render(self.win)
+
         for row in self.field.field:
             for point in row:
                 point.render(self.win, self.verbose)
