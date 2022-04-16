@@ -4,7 +4,7 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.x = 3
-        self.y = 0
+        self.y = 3
         self.color = (255, 0, 0)
     
     def render(self, win):
