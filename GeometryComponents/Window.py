@@ -30,6 +30,8 @@ class Window:
             for point in row:
                 point.render(self.win, self.verbose)
         
+        self.marchingSquare()
+        
 
     def marchingSquare(self):
         field = self.field.field
@@ -108,5 +110,4 @@ class Window:
             pygame.time.Clock().tick(self.fps)
             self.commands()
             self.render()
-            self.marchingSquare()
             pygame.display.update()
