@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-from Window import Window
+from GeometryComponents.Window import Window
 
 if __name__ == "__main__":
     pygame.init()
