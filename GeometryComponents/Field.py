@@ -13,7 +13,7 @@ class Field:
         self.isoVal = random.uniform(2.1, 3.9)
 
     def load(self):
-        with open("./data.txt") as file:
+        with open("./Data/data.txt") as file:
             for y in range(self.cols):
                 self.field.append([])
                 for x in range(self.rows):
