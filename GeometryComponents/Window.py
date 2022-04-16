@@ -24,6 +24,17 @@ class Window:
             if events.type == pygame.QUIT:
                 self.run = False
 
+        keys = pygame.key.get_pressed()
+        
+        if keys[pygame.K_RIGHT]:
+            self.player.x += 1
+        if keys[pygame.K_LEFT]:
+            self.player.x -= 1
+        if keys[pygame.K_UP]:
+            self.player.y -= 1
+        if keys[pygame.K_DOWN]:
+            self.player.y += 1
+
     def render(self):
         self.win.fill((0, 0, 0))
         self.player.render(self.win)
