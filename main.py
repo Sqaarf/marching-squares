@@ -7,7 +7,10 @@ if __name__ == "__main__":
     pygame.init()
 
     if len(sys.argv) == 2:
-        verbose = bool(sys.argv[1])
+        if sys.argv[1] == "--verbose":
+            verbose = True
+        else:
+            verbose = False
     else:
         verbose = False
     window = Window(verbose)
