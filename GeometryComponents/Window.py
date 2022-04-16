@@ -1,7 +1,7 @@
 import pygame
 
-from Field import Field
-from Point import Point
+from GeometryComponents.Field import Field
+from GeometryComponents.Point import Point
 
 
 class Window:

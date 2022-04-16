@@ -1,6 +1,6 @@
 import random
 
-from Point import Point
+from GeometryComponents.Point import Point
 
 
 class Field:
