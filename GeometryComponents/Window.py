@@ -5,7 +5,7 @@ from GeometryComponents.Point import Point
 
 
 class Window:
-    def __init__(self, player, verbose):
+    def __init__(self, player):
         self.width, self.height = (800, 800)
         self.win = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption('Marching squares')
@@ -17,7 +17,10 @@ class Window:
         self.field.load()
 
         self.player = player
-        self.verbose = verbose
+        self.debug = False
+        
+
+        self.walls = []
 
     def commands(self):
         for events in pygame.event.get():
@@ -26,14 +29,19 @@ class Window:
 
         keys = pygame.key.get_pressed()
         
-        if keys[pygame.K_RIGHT]:
-            self.player.x += 1
+        if keys[pygame.K_RIGHT] and not self.player.isColliding(self.walls):
+            self.player.x += 2
         if keys[pygame.K_LEFT]:
-            self.player.x -= 1
+            self.player.x -= 2
         if keys[pygame.K_UP]:
-            self.player.y -= 1
+            self.player.y -= 2
         if keys[pygame.K_DOWN]:
-            self.player.y += 1
+            self.player.y += 2
+        if keys[pygame.K_d]:
+            if self.debug:
+                self.debug = False
+            else:
+                self.debug = True
 
     def render(self):
         self.win.fill((0, 0, 0))
@@ -41,7 +49,11 @@ class Window:
 
         for row in self.field.field:
             for point in row:
-                point.render(self.win, self.verbose)
+                point.render(self.win, self.debug)
+    
+        if self.debug:
+            for wall in self.walls:
+                pygame.draw.rect(self.win, (0, 0, 255), wall)
         
 
     def marchingSquare(self):
@@ -84,38 +96,50 @@ class Window:
         return tlp.bVal * 8 + trp.bVal * 4 + brp.bVal * 2 + blp.bVal * 1
 
     def drawIsoLines(self, state: int, a: tuple, b: tuple, c: tuple, d: tuple):
+        rectLine = None
+        rectLine2 = None
 
         if state == 1:
-            pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
         elif state == 2:
-            pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
         elif state == 3:
-            pygame.draw.line(self.win, (255, 255, 255), b, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), b, d, 2)
         elif state == 4:
-            pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
         elif state == 5:
-            pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
-            pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
+            rectLine2 = pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
         elif state == 6:
-            pygame.draw.line(self.win, (255, 255, 255), a, c, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, c, 2)
         elif state == 7:
-            pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
         elif state == 8:
-            pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, d, 2)
         elif state == 9:
-            pygame.draw.line(self.win, (255, 255, 255), a, c, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, c, 2)
         elif state == 10:
-            pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
-            pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
+            rectLine2 = pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
         elif state == 11:
-            pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), a, b, 2)
         elif state == 12:
-            pygame.draw.line(self.win, (255, 255, 255), b, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), b, d, 2)
         elif state == 13:
-            pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), b, c, 2)
         elif state == 14:
-            pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
+            rectLine = pygame.draw.line(self.win, (255, 255, 255), c, d, 2)
+        
+        if rectLine != None and rectLine2 != None:
+            if rectLine not in self.walls and rectLine2 not in self.walls:
+                self.walls.append(rectLine)
+                self.walls.append(rectLine2)
+        elif rectLine != None and rectLine2 == None:
+            if rectLine not in self.walls:
+                self.walls.append(rectLine)
 
+
+        
     def loop(self):
         while self.run:
             pygame.time.Clock().tick(self.fps)
